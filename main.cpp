@@ -8,12 +8,9 @@
 
 // GLOBAL VARIABLES
 WiFiInterface *wifi;
-//MQTT::Client<MQTTNetwork, Countdown> *client;
 
 InterruptIn btn2(BUTTON1);
 EventQueue queue(32 * EVENTS_EVENT_SIZE);
-Thread t;
-Ticker publisher;
 Accelerometer acc;
 Gyro gyro;
 double Accel[3]={0};
@@ -21,14 +18,11 @@ double Gyro[3]={0};
 double  accAngleX=0;
 double  accAngleY=0;
 double elapsedTime=0;
-double roll;  double roll10; double *r = &roll; 
-double pitch; double pitch10; double *p = &pitch;
-double yaw; double yaw10; double *y = &yaw;
+double roll; double *r = &roll; 
+double pitch; double *p = &pitch;
+double yaw; double *y = &yaw;
 double gyroAngleX=0;
 double gyroAngleY=0;
-int counter=0;
-int idR[32] = {0};
-int indexR = 0;
 volatile int message_num = 0;
 volatile int arrivedcount = 0;
 volatile bool closed = false;
@@ -71,7 +65,6 @@ void messageArrived(MQTT::MessageData& md) {
 }
 
 void publish_message(MQTT::Client<MQTTNetwork, Countdown> *client1) {
-  //message_num++;
   MQTT::Message message;
   char buff[100];
   sprintf(buff, "Roll: %f, Pitch: %f, Yaw: %f ", *r, *p, *y);
@@ -85,8 +78,6 @@ void publish_message(MQTT::Client<MQTTNetwork, Countdown> *client1) {
   printf("rc:  %d\r\n", rc);
   printf("Pubished message: %s\r\n", buff);
 }
-
-//void startPublish(void) { mqtt_queue.call_every(1s, &publish_message, &client); }
 
 void close_mqtt() { 
     closed = true; 
@@ -139,10 +130,7 @@ int main() {
   
   mqtt_thread.start(callback(&mqtt_queue, &EventQueue::dispatch_forever));
   mqtt_queue.call_every(100ms,&record);
-  //btn2.rise(mqtt_queue.event(&publish_message, &client));
   mqtt_queue.call_every(1s, &publish_message, &client);
-  //btn2.rise(mqtt_queue.event(startPublish));
-  //mqtt_queue.call(&publish_message, &client);
   
   /*
   int num = 0;
@@ -159,8 +147,6 @@ int main() {
     ThisThread::sleep_for(1s);
   }
   
-  //t.start(callback(&queue, &EventQueue::dispatch_forever));
-
   printf("Ready to close MQTT Network......\n");
 
   if ((rc = client.unsubscribe(topic)) != 0) {
