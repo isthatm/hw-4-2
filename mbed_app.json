@@ -2,11 +2,11 @@
     "config": {
     "wifi-ssid": {
             "help": "WiFi SSID",
-            "value": "\"Minh's phon\""
+            "value": "\"SSID\""
     },
     "wifi-password": {
             "help": "WiFi Password",
-            "value": "\"doanthuxemnao\""
+            "value": "\"password\""
     }
     },
     "target_overrides": {
