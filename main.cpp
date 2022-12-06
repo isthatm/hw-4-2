@@ -9,7 +9,6 @@
 // GLOBAL VARIABLES
 WiFiInterface *wifi;
 
-InterruptIn btn2(BUTTON1);
 EventQueue queue(32 * EVENTS_EVENT_SIZE);
 Accelerometer acc;
 Gyro gyro;
